@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ public class DataImportService {
 
             ObjectMapper mapper = new ObjectMapper();
             List<Map<String, Object>> data = mapper.readValue(inputStream, new TypeReference<List<Map<String, Object>>>() {});
+
+            mongoTemplate.dropCollection("hierarchies");
 
             mongoTemplate.insert(data, "hierarchies");
 
