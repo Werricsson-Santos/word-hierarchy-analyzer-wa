@@ -2,9 +2,12 @@ package dev.werricsson.word_hierarchy_analyzer.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.werricsson.word_hierarchy_analyzer.model.Hierarchy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,11 @@ public class DataImportService {
             mongoTemplate.dropCollection("hierarchies");
 
             mongoTemplate.insert(data, "hierarchies");
+
+            mongoTemplate.indexOps(Hierarchy.class)
+                         .ensureIndex(new Index().on("category", Sort.Direction.ASC)
+                                                 .unique()
+                                                 .named("_category_"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
