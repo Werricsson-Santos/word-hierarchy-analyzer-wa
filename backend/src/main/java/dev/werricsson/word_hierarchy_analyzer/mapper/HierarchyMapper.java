@@ -21,7 +21,7 @@ public interface HierarchyMapper {
     Hierarchy toEntity(final HierarchyRequest request);
 
     @Mapping(target = "id", ignore = true)
-    Hierarchy toEntity(final HierarchyRequest request, @MappingTarget Hierarchy entity);
+    Hierarchy toEntity(final HierarchyRequest request, @MappingTarget final Hierarchy entity);
 
     HierarchyResponse toResponse(final Hierarchy entity);
 }
