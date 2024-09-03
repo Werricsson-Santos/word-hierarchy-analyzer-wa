@@ -40,4 +40,10 @@ public class HierarchyService {
         return repository.save(mapper.toEntity(request, findById(id)));
 
     }
+
+    public Hierarchy delete(final String id) {
+        //To throw exception if hierarchy don't exist
+        findById(id);
+        return repository.findAndRemove(id);
+    }
 }

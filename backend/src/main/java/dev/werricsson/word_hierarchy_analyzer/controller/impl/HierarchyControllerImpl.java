@@ -54,6 +54,7 @@ public class HierarchyControllerImpl implements HierarchyController {
 
     @Override
     public ResponseEntity<Void> delete(String id) {
-        return null;
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 }
