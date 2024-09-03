@@ -1,6 +1,5 @@
 package dev.werricsson.word_hierarchy_analyzer.service;
 
-import dev.werricsson.word_hierarchy_analyzer.controller.exceptions.ControllerExceptionHandler;
 import dev.werricsson.word_hierarchy_analyzer.mapper.HierarchyMapper;
 import dev.werricsson.word_hierarchy_analyzer.model.Hierarchy;
 import dev.werricsson.word_hierarchy_analyzer.model.request.HierarchyRequest;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.String.format;
 
