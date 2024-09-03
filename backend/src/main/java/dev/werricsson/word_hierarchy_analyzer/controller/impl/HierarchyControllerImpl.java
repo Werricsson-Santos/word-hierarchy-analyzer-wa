@@ -47,7 +47,9 @@ public class HierarchyControllerImpl implements HierarchyController {
 
     @Override
     public ResponseEntity<HierarchyResponse> update(String id, HierarchyRequest request) {
-        return null;
+
+        return ResponseEntity.ok(mapper.toResponse(service.update(id, request)));
+
     }
 
     @Override

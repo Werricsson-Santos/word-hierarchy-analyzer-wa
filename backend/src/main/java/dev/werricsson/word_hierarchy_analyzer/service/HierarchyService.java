@@ -1,5 +1,6 @@
 package dev.werricsson.word_hierarchy_analyzer.service;
 
+import dev.werricsson.word_hierarchy_analyzer.controller.exceptions.ControllerExceptionHandler;
 import dev.werricsson.word_hierarchy_analyzer.mapper.HierarchyMapper;
 import dev.werricsson.word_hierarchy_analyzer.model.Hierarchy;
 import dev.werricsson.word_hierarchy_analyzer.model.request.HierarchyRequest;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -33,5 +35,11 @@ public class HierarchyService {
                             format("Object not found. Id: %s, Type: %s ", id, Hierarchy.class.getSimpleName())
                         )
                 );
+    }
+
+    public Hierarchy update(final String id, final HierarchyRequest request) {
+
+        return repository.save(mapper.toEntity(request, findById(id)));
+
     }
 }

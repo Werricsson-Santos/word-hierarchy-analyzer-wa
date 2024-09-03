@@ -22,7 +22,7 @@ public class HierarchyRepository {
         return mongoTemplate.findAll(Hierarchy.class);
     }
 
-    public Optional<Hierarchy> findById(String id) {
+    public Optional<Hierarchy> findById(final String id) {
         return Optional.ofNullable(mongoTemplate.findById(id, Hierarchy.class));
     }
 }
