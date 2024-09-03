@@ -17,7 +17,7 @@ public interface HierarchyController {
     ResponseEntity<List<HierarchyResponse>> findAll();
 
     @GetMapping("/{id}")
-    ResponseEntity<HierarchyResponse> find(@PathVariable String id);
+    ResponseEntity<HierarchyResponse> findById(@PathVariable String id);
 
     @PutMapping("/{id}")
     ResponseEntity<HierarchyResponse> update(@PathVariable String id, @RequestBody HierarchyRequest request);

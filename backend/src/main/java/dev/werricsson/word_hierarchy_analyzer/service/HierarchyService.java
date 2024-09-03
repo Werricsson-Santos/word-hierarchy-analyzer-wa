@@ -23,4 +23,8 @@ public class HierarchyService {
     public List<Hierarchy> findAll() {
         return repository.findAll();
     }
+
+    public Hierarchy findById(final String id) {
+        return repository.findById(id);
+    }
 }

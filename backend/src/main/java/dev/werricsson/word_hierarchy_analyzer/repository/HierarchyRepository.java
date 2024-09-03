@@ -20,4 +20,8 @@ public class HierarchyRepository {
     public List<Hierarchy> findAll() {
         return mongoTemplate.findAll(Hierarchy.class);
     }
+
+    public Hierarchy findById(String id) {
+        return mongoTemplate.findById(id, Hierarchy.class);
+    }
 }

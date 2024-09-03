@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/hierarchies")
@@ -39,8 +40,14 @@ public class HierarchyControllerImpl implements HierarchyController {
     }
 
     @Override
-    public ResponseEntity<HierarchyResponse> find(String id) {
-        return null;
+    public ResponseEntity<HierarchyResponse> findById(String id) {
+        Optional<HierarchyResponse> response = Optional
+                .ofNullable(service.findById(id))
+                .map(mapper::toResponse);
+
+        return response
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
