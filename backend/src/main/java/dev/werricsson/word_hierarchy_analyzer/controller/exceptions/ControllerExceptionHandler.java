@@ -1,8 +1,10 @@
 package dev.werricsson.word_hierarchy_analyzer.controller.exceptions;
 
+import dev.werricsson.word_hierarchy_analyzer.service.exception.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -56,6 +59,22 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    ResponseEntity<StandardError> objectNotFoundException(
+            ObjectNotFoundException ex, HttpServletRequest request
+    ) {
+        logger.error("Object not found error {}", ex.getMessage());
+        return ResponseEntity.status(NOT_FOUND)
+                .body(StandardError.builder()
+                        .timestamp(now())
+                        .status(NOT_FOUND.value())
+                        .error(NOT_FOUND.getReasonPhrase())
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .build()
+                );
     }
 
     private String verifyDupKey(String message) {

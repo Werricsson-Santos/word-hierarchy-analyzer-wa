@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class HierarchyRepository {
         return mongoTemplate.findAll(Hierarchy.class);
     }
 
-    public Hierarchy findById(String id) {
-        return mongoTemplate.findById(id, Hierarchy.class);
+    public Optional<Hierarchy> findById(String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, Hierarchy.class));
     }
 }
