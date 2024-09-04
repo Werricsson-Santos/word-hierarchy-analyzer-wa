@@ -29,7 +29,7 @@ public class HierarchyService {
     }
 
     public Hierarchy findById(final String id) {
-        return handleNotFound(repository.findById(id), id);
+        return handleNotFound(id);
     }
 
     public Hierarchy update(final String id, final HierarchyRequest request) {
@@ -37,16 +37,18 @@ public class HierarchyService {
     }
 
     public Hierarchy delete(final String id) {
-        return handleNotFound(repository.findAndRemove(id), id);
+        Hierarchy hierarchy = handleNotFound(id);
+
+        return repository.findAndRemove(id);
     }
 
-    private Hierarchy handleNotFound(Hierarchy h, String id) {
+    private Hierarchy handleNotFound(String id) {
         Optional<Hierarchy> hierarchy = Optional.ofNullable(repository.findById(id));
 
         if(hierarchy.isEmpty()) {
             throw new ObjectNotFoundException(
                     format("Object not found. Id: %s, Type: %s ", id, Hierarchy.class.getSimpleName())
             );
-        } else return h;
+        } else return hierarchy.get();
     }
 }
