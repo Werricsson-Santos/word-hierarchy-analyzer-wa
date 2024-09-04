@@ -1,4 +1,4 @@
-package dev.werricsson.word_hierarchy_analyzer.controller.exceptions;
+package dev.werricsson.word_hierarchy_analyzer.controller.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

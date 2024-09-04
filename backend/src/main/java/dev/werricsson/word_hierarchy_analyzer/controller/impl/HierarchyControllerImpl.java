@@ -1,6 +1,6 @@
 package dev.werricsson.word_hierarchy_analyzer.controller.impl;
 
-import dev.werricsson.word_hierarchy_analyzer.controller.HierarchyController;
+import dev.werricsson.word_hierarchy_analyzer.controller.contract.HierarchyController;
 import dev.werricsson.word_hierarchy_analyzer.mapper.HierarchyMapper;
 import dev.werricsson.word_hierarchy_analyzer.model.request.HierarchyRequest;
 import dev.werricsson.word_hierarchy_analyzer.model.response.HierarchyResponse;

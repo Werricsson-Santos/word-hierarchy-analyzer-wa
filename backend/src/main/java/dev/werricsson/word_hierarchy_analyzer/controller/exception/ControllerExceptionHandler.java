@@ -1,10 +1,9 @@
-package dev.werricsson.word_hierarchy_analyzer.controller.exceptions;
+package dev.werricsson.word_hierarchy_analyzer.controller.exception;
 
 import dev.werricsson.word_hierarchy_analyzer.service.exception.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
