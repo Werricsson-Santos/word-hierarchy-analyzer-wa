@@ -37,7 +37,7 @@ public class HierarchyService {
     }
 
     public Hierarchy delete(final String id) {
-        Hierarchy hierarchy = handleNotFound(id);
+        handleNotFound(id);
 
         return repository.findAndRemove(id);
     }
