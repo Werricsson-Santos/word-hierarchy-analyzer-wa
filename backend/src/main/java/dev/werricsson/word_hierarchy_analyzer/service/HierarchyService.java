@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -28,22 +29,24 @@ public class HierarchyService {
     }
 
     public Hierarchy findById(final String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(
-                            format("Object not found. Id: %s, Type: %s ", id, Hierarchy.class.getSimpleName())
-                        )
-                );
+        return handleNotFound(repository.findById(id), id);
     }
 
     public Hierarchy update(final String id, final HierarchyRequest request) {
-
         return repository.save(mapper.toEntity(request, findById(id)));
-
     }
 
     public Hierarchy delete(final String id) {
-        //To throw exception if hierarchy don't exist
-        findById(id);
-        return repository.findAndRemove(id);
+        return handleNotFound(repository.findAndRemove(id), id);
+    }
+
+    private Hierarchy handleNotFound(Hierarchy h, String id) {
+        Optional<Hierarchy> hierarchy = Optional.ofNullable(repository.findById(id));
+
+        if(hierarchy.isEmpty()) {
+            throw new ObjectNotFoundException(
+                    format("Object not found. Id: %s, Type: %s ", id, Hierarchy.class.getSimpleName())
+            );
+        } else return h;
     }
 }

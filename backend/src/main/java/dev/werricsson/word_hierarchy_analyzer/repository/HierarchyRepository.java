@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,8 +23,8 @@ public class HierarchyRepository {
         return mongoTemplate.findAll(Hierarchy.class);
     }
 
-    public Optional<Hierarchy> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, Hierarchy.class));
+    public Hierarchy findById(final String id) {
+        return mongoTemplate.findById(id, Hierarchy.class);
     }
 
     public Hierarchy findAndRemove(String id) {
