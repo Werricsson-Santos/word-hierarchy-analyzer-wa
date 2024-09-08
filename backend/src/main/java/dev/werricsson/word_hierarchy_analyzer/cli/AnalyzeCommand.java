@@ -1,14 +1,19 @@
 package dev.werricsson.word_hierarchy_analyzer.cli;
 
+import dev.werricsson.word_hierarchy_analyzer.model.response.WordAnalysisResponse;
 import dev.werricsson.word_hierarchy_analyzer.service.WordAnalyzerService;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Option;
 
-@RequiredArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
+
+
 @Command(
         name = "analyze",
         mixinStandardHelpOptions = true,
@@ -18,7 +23,14 @@ import picocli.CommandLine.Option;
 class AnalyzeCommand implements Runnable {
 
     private final WordAnalyzerService wordAnalyzerService;
-    private final Logger logger = LoggerFactory.getLogger(AnalyzeCommand.class);
+    @Autowired
+    private final CLIPrinter cliPrinter;
+
+    public AnalyzeCommand(WordAnalyzerService wordAnalyzerService, CLIPrinter cliPrinter) {
+        this.wordAnalyzerService = wordAnalyzerService;
+        this.cliPrinter = cliPrinter;
+    }
+
 
     @Parameters(index = "0", description = "Chama o método analyze.")
     String analyze;
@@ -43,12 +55,54 @@ class AnalyzeCommand implements Runnable {
     @Override
     public void run() {
         if (text == null || text.isEmpty()) {
-            logger.info("O parâmetro <text> é obrigatório.");
-            System.exit(1); // Define um código de saída de erro
+            cliPrinter.printInfo("O parâmetro <text> é obrigatório.");
+            System.exit(1);
         }
 
         var analysisResult = wordAnalyzerService.analyze(depth, text, verbose);
 
-        logger.info(analysisResult.toString());
+        if(verbose) {
+            getVerbosePrint(analysisResult);
+
+        } else {
+            getSimplePrint(analysisResult);
+        }
+
     }
+
+    private void getVerbosePrint(Object analysis) {
+        WordAnalysisResponse response = (WordAnalysisResponse) analysis;
+        Map<String, Integer> hierarchyCount = response.getHierarchyCount();
+
+        for (Map.Entry<String, Integer> match : hierarchyCount.entrySet()) {
+            String hirarchyHaveWord = match.getKey();
+            Integer countMatch = match.getValue();
+            cliPrinter.printInfo(format("%s: %d; ", hirarchyHaveWord, countMatch));
+        }
+
+        String[] headers = {"Performance", "Tempo em milisegundos"};
+        List<String[]> rowsList = new ArrayList<>();
+        for(Map.Entry<String, Long> performAnalyse : response.getPerformAnalysis().entrySet()) {
+            String metric = performAnalyse.getKey();
+            String measure = format("%d ms", performAnalyse.getValue());
+
+            rowsList.add(new String[]{metric, measure});
+        }
+
+        String[][] rows = rowsList.toArray(new String[0][]);
+
+        cliPrinter.printTable(headers, rows);
+    }
+
+
+    private void getSimplePrint(Object analysis) {
+        Map<String, Integer> hierarchyCount = (Map<String, Integer>) analysis;
+
+        for (Map.Entry<String, Integer> match : hierarchyCount.entrySet()) {
+            String hirarchyHaveWord = match.getKey();
+            Integer countMatch = match.getValue();
+            cliPrinter.printInfo(format("%s: %d; ", hirarchyHaveWord, countMatch));
+        }
+    }
+
 }
