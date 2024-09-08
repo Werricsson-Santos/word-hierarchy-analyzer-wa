@@ -21,31 +21,5 @@ public class CLIPrinter {
         err.println("Erro: " + message);
     }
 
-    public void printTable(String[] headers, String[][] rows) {
-        int[] columnWidths = new int[headers.length];
-        for (int i = 0; i < headers.length; i++) {
-            columnWidths[i] = headers[i].length();
-        }
 
-        for (String[] row : rows) {
-            for (int i = 0; i < row.length; i++) {
-                columnWidths[i] = Math.max(columnWidths[i], row[i].length());
-            }
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < headers.length; i++) {
-            stringBuilder.append(String.format("%-" + columnWidths[i] + "s", headers[i])).append(" | ");
-        }
-        stringBuilder.append("\n");
-
-        for (String[] row : rows) {
-            for (int i = 0; i < row.length; i++) {
-                stringBuilder.append(String.format("%-" + columnWidths[i] + "s", row[i])).append(" | ");
-            }
-            stringBuilder.append("\n");
-        }
-
-        out.println(stringBuilder);
-    }
 }
