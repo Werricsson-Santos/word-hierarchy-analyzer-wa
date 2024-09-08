@@ -4,10 +4,12 @@ import dev.werricsson.word_hierarchy_analyzer.model.request.WordAnalysisRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface WordAnalyzerController {
     @PostMapping
-    ResponseEntity<Map<String, Integer>> analyze(@RequestBody WordAnalysisRequest text);
+    ResponseEntity<Object> analyze(
+            @RequestBody WordAnalysisRequest text,
+            @RequestParam(required = false) boolean verbose
+    );
 }

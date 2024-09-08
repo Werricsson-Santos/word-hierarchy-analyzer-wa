@@ -2,12 +2,11 @@ package dev.werricsson.word_hierarchy_analyzer.controller.impl;
 
 import dev.werricsson.word_hierarchy_analyzer.controller.contract.WordAnalyzerController;
 import dev.werricsson.word_hierarchy_analyzer.model.request.WordAnalysisRequest;
+import dev.werricsson.word_hierarchy_analyzer.model.response.WordAnalysisResponse;
 import dev.werricsson.word_hierarchy_analyzer.service.WordAnalyzerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/word-analyzer")
@@ -19,12 +18,19 @@ public class WordAnalyzerControllerImpl implements WordAnalyzerController {
 
     @Override
     @PostMapping("/analyze")
-    public ResponseEntity<Map<String, Integer>> analyze(@RequestBody WordAnalysisRequest request) {
-        // Chama o serviço para analisar o texto
-        Map<String, Integer> analysisResult = wordAnalyzerService.analyze(request.getDepth(), request.getText());
+    public ResponseEntity<Object> analyze(
+            @RequestBody WordAnalysisRequest request,
+            @RequestParam(required = false) boolean verbose
+    ) {
+        Integer depth = request.getDepth() != null ? request.getDepth() : 1;
 
-        // Retorna a resposta com o resultado da análise
-        return ResponseEntity.ok(analysisResult);
+        WordAnalysisResponse analysisResult = wordAnalyzerService.analyze(depth, request.getText());
+
+        if(verbose) {
+            return ResponseEntity.ok(analysisResult);
+        }
+
+        return ResponseEntity.ok(analysisResult.getHierarchyCount());
     }
 
 }
