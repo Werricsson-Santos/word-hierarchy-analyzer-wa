@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import picocli.CommandLine.Parameters;
 
 @Component
 public class WordAnalyzerCLI implements CommandLineRunner {
@@ -21,7 +20,7 @@ public class WordAnalyzerCLI implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args)  {
         for (String arg : args) {
             logger.info(arg);
         }

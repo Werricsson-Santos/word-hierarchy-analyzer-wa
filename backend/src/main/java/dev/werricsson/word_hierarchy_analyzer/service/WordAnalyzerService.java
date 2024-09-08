@@ -5,7 +5,6 @@ import dev.werricsson.word_hierarchy_analyzer.model.response.WordAnalysisRespons
 import dev.werricsson.word_hierarchy_analyzer.service.exception.ObjectNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,7 @@ public class WordAnalyzerService {
         int currentDepth = 1;
 
         // Obtém todas as hierarquias do MongoDB
+        assert hierarchyService != null;
         List<Hierarchy> hierarchies = hierarchyService.findAll();
 
         long endParamsLoad = System.currentTimeMillis();
