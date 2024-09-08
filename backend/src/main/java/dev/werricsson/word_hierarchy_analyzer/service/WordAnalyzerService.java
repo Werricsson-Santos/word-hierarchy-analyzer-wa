@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static dev.werricsson.word_hierarchy_analyzer.model.response.AnalysisType.PARAMS;
+import static dev.werricsson.word_hierarchy_analyzer.model.response.AnalysisType.PHRASE_CHECK;
 import static java.lang.String.format;
 
 @Service
@@ -17,6 +19,8 @@ public class WordAnalyzerService {
     private final HierarchyService hierarchyService;
 
     public WordAnalysisResponse analyze(Integer depth, String text) {
+        long startParamsLoad = System.currentTimeMillis();
+
         WordAnalysisResponse wordAnalysis = new WordAnalysisResponse();
         Map<String, Integer> categoryCount = wordAnalysis.getHierarchyCount();
         String cleanedText = text.replaceAll("[^\\p{L}\\s]", ""); //Remove caracteres especiais, mantendo os espaços em branco.
@@ -26,6 +30,13 @@ public class WordAnalyzerService {
 
         // Obtém todas as hierarquias do MongoDB
         List<Hierarchy> hierarchies = hierarchyService.findAll();
+
+        long endParamsLoad = System.currentTimeMillis();
+        long paramsLoadTime = endParamsLoad - startParamsLoad;
+
+        wordAnalysis.setPerformAnalysis(PARAMS, paramsLoadTime);
+
+        long startPhraseCheck = System.currentTimeMillis();
 
         // Itera sobre cada hierarquia
         for (Hierarchy hierarchy : hierarchies) {
@@ -45,6 +56,11 @@ public class WordAnalyzerService {
         if (categoryCount.isEmpty()) {
             throw new ObjectNotFoundException(format("Na frase não existe nenhum filho do nível %d e nem o nível %d possui os termos especificados.", depth, depth));
         }
+
+        long endPhraseCheck = System.currentTimeMillis();
+        long phraseCheckTime = endPhraseCheck - startPhraseCheck;
+
+        wordAnalysis.setPerformAnalysis(PHRASE_CHECK,phraseCheckTime);
 
         return wordAnalysis;
     }
