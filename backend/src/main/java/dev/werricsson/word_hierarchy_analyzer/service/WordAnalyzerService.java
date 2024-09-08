@@ -3,7 +3,10 @@ package dev.werricsson.word_hierarchy_analyzer.service;
 import dev.werricsson.word_hierarchy_analyzer.model.Hierarchy;
 import dev.werricsson.word_hierarchy_analyzer.model.response.WordAnalysisResponse;
 import dev.werricsson.word_hierarchy_analyzer.service.exception.ObjectNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,12 +16,14 @@ import static dev.werricsson.word_hierarchy_analyzer.model.response.AnalysisType
 import static java.lang.String.format;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
 public class WordAnalyzerService {
 
+    @Autowired
     private final HierarchyService hierarchyService;
 
-    public WordAnalysisResponse analyze(Integer depth, String text) {
+    public Object analyze(Integer depth, String text, boolean verbose) {
         long startParamsLoad = System.currentTimeMillis();
 
         WordAnalysisResponse wordAnalysis = new WordAnalysisResponse();
@@ -62,7 +67,11 @@ public class WordAnalyzerService {
 
         wordAnalysis.setPerformAnalysis(PHRASE_CHECK,phraseCheckTime);
 
-        return wordAnalysis;
+        if(verbose) {
+            return wordAnalysis;
+        } else {
+            return wordAnalysis.getHierarchyCount();
+        }
     }
 
     private void analyzeSubcategories(Map<String, Object> subcategories, String[] words, WordAnalysisResponse wordAnalysis, Integer depth, int currentDepth) {
