@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { Container } from "reactstrap";
 
 interface ApiResponse {
     id: string
@@ -9,16 +10,6 @@ interface ApiResponse {
     subcategories: Object
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hierarchies`);
-//     const serverSideData: ApiResponse[] = await response.json(); 
-    
-//     return {
-//         props: {
-//             serverSideData,
-//         },
-//     };
-// }
 
 const Hierarchies: NextPage = () => {
     const [clientSideData, setClienteSideData ] = useState<ApiResponse[] | undefined>()
@@ -30,6 +21,7 @@ const Hierarchies: NextPage = () => {
     const fetchData = async () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hierarchies`);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -74,20 +66,23 @@ const Hierarchies: NextPage = () => {
 
             <Header />
 
-            <h1>Hierarquia de Palavras</h1>
+            
+            <h1 className="text-center my-5">Hierarquia de Palaras</h1>
 
-            {clientSideData ? (
-                <ul>
-                    {clientSideData.map((item) => (
-                        <li key={item.category}>
-                            <strong>{item.category}</strong>
-                            {renderSubcategories(item.subcategories)}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>Loading...</p>
-            )}
+            <Container className="d-flex justify-content-center my-4">
+                {clientSideData ? (
+                    <ul>
+                        {clientSideData.map((item) => (
+                            <li key={item.category}>
+                                <strong>{item.category}</strong>
+                                {renderSubcategories(item.subcategories)}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </Container>
         </>
     );
 }

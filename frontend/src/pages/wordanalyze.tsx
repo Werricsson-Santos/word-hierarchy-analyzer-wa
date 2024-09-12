@@ -1,3 +1,4 @@
+import Form from "@/components/Form";
 import Header from "@/components/Header";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -13,9 +14,8 @@ const WordAnalyze: NextPage = () => {
         
         <Header />
 
-        <h1>
-            WiP
-        </h1>
+        <Form />
+        
         </>
     )
 }
