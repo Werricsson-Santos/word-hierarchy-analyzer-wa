@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { Button, Form as BootstrapForm, FormGroup, Label, Input, Alert, Row, Col, Container } from 'reactstrap';
+interface WordAnalysis {
+    depth: number;
+    category: string;
+    hierarchyCount: Record<string, number>;
+    performAnalysis: Record<string, number>;
+}
 
 const Form: React.FC = () => {
     const [depth, setDepth] = useState<number | undefined>(undefined);
     const [verbose, setVerbose] = useState<boolean>(false);
     const [text, setText] = useState<string>('');
-    const [response, setResponse] = useState<any>(null);
+    const [response, setResponse] = useState<WordAnalysis>();
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,7 +24,7 @@ const Form: React.FC = () => {
         };
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/word-analyzer/analyze`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/word-analyzer/analyze?verbose=${verbose}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,21 +37,34 @@ const Form: React.FC = () => {
             }
 
             const data = await res.json();
+            console.log(data);
             setResponse(data);
-            setError(null); // Limpar erros anteriores
+            setError(null); 
         } catch (error) {
             setError('Failed to fetch data from the backend.');
             console.error('Error:', error);
         }
     };
 
+    const handleDownload = () => {
+        if (response) {
+            const blob = new Blob([JSON.stringify(response, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'response.json';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    };
+
     return (
-        <Container className="d-flex justify-content-center align-items-center vh-100"> {/* Container centralizado */}
-            <BootstrapForm onSubmit={handleSubmit} className="w-50"> {/* Largura ajustada */}
+        <Container className="d-flex justify-content-center align-items-center vh-100"> 
+            <BootstrapForm onSubmit={handleSubmit} className="w-50"> 
                 <Row>
-                    <Col xs="6"> {/* Campo depth alinhado à esquerda */}
+                    <Col xs="6"> 
                         <FormGroup>
-                            <Label for="depth">Depth (opcional):</Label>
+                            <Label for="depth">Profundidade (opcional):</Label>
                             <Input
                                 type="number"
                                 id="depth"
@@ -58,7 +77,7 @@ const Form: React.FC = () => {
                     <Col xs="6" className="text-center">
                         <FormGroup check>
                             <Label for="verbose">
-                                Verbose Response:
+                                Resposta verbosa
                                 <Input
                                     type="checkbox"
                                     id="verbose"
@@ -73,7 +92,7 @@ const Form: React.FC = () => {
                 <Row className="mt-3">
                     <Col>
                         <FormGroup>
-                            <Label for="text">Text:</Label>
+                            <Label for="text">Texto:</Label>
                             <Input
                                 type="textarea"
                                 id="text"
@@ -93,7 +112,45 @@ const Form: React.FC = () => {
                 {response && (
                     <div className="mt-3">
                         <h3>Response:</h3>
-                        <pre>{JSON.stringify(response, null, 2)}</pre>
+                        {response.hierarchyCount ? (
+                            <ul>
+                                {Object.entries(response.hierarchyCount).map(([category, count]) => (
+                                    <li key={category}>
+                                        <strong>{category}</strong>: {count} palavras
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <ul>
+                                {Object.entries(response).map(([category, count]) => (
+                                    <li key={category}>
+                                        <strong>{category}</strong>: {count} palavras
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                        {verbose && response.performAnalysis && (
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Operação</th>
+                                        <th>Tempo (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Object.entries(response.performAnalysis).map(([operation, time]) => (
+                                        <tr key={operation}>
+                                            <td>{operation}</td>
+                                            <td>{time}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                        <Button onClick={handleDownload} className="bg-success mt-3">
+                            Download JSON
+                        </Button>
                     </div>
                 )}
             </BootstrapForm>

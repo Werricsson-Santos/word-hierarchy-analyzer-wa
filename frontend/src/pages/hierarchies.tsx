@@ -1,8 +1,9 @@
 import Header from "@/components/Header";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Container } from "reactstrap";
+import { Button, Container, Row, Col } from "reactstrap";
 
 interface ApiResponse {
     id: string
@@ -21,7 +22,7 @@ const Hierarchies: NextPage = () => {
     const fetchData = async () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hierarchies`);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -65,11 +66,21 @@ const Hierarchies: NextPage = () => {
             </Head>
 
             <Header />
-
             
-            <h1 className="text-center my-5">Hierarquia de Palaras</h1>
+            <Container className="my-5">
+                <h1 className="text-center flex-grow-1">Hierarquia de Palavras</h1>
 
-            <Container className="d-flex justify-content-center my-4">
+            <div className="d-flex justify-content-end">
+                <Link href="/wordanalyze">
+                    <Button>
+                        Analise uma frase
+                    </Button>
+                </Link>
+            </div>
+            </Container>
+                
+
+            <Container className="bg-dark text-white p-3 rounded mb-3 d-flex justify-content-center" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                 {clientSideData ? (
                     <ul>
                         {clientSideData.map((item) => (
