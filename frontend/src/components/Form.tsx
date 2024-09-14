@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Form as BootstrapForm, FormGroup, Label, Input, Alert, Row, Col, Container } from 'reactstrap';
+
 interface WordAnalysis {
     depth: number;
     category: string;
@@ -33,16 +34,22 @@ const Form: React.FC = () => {
             });
 
             if (!res.ok) {
-                throw new Error('Network response was not ok');
+                const errorData = await res.json()
+                throw new Error(errorData.message || 'Network response was not ok');
             }
 
             const data = await res.json();
             console.log(data);
             setResponse(data);
             setError(null); 
-        } catch (error) {
-            setError('Failed to fetch data from the backend.');
-            console.error('Error:', error);
+        } catch (error: any) {
+            if (error?.message === 'Failed to fetch') {
+                setError('Falha ao buscar os dados no backend. O servidor está offline ou a URL está incorreta.');
+            } else if (error.message.includes('Connection refused')) {
+                setError('Conexão recusada. O servidor está offline ou a URL está incorreta')
+            } else {
+                setError('Error: ' && error.message);
+            }
         }
     };
 
@@ -105,13 +112,13 @@ const Form: React.FC = () => {
                 </Row>
                 <Row className="text-center">
                     <Col>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">Analisar</Button>
                     </Col>
                 </Row>
                 {error && <Alert color="danger" className="mt-3">{error}</Alert>}
                 {response && (
                     <div className="mt-3">
-                        <h3>Response:</h3>
+                        <h3>Resposta:</h3>
                         {response.hierarchyCount ? (
                             <ul>
                                 {Object.entries(response.hierarchyCount).map(([category, count]) => (
@@ -124,7 +131,7 @@ const Form: React.FC = () => {
                             <ul>
                                 {Object.entries(response).map(([category, count]) => (
                                     <li key={category}>
-                                        <strong>{category}</strong>: {count} palavras
+                                        <strong>{category}</strong>: {count} palavra{count > 1 ? "s" : ""}
                                     </li>
                                 ))}
                             </ul>
@@ -142,7 +149,7 @@ const Form: React.FC = () => {
                                     {Object.entries(response.performAnalysis).map(([operation, time]) => (
                                         <tr key={operation}>
                                             <td>{operation}</td>
-                                            <td>{time}</td>
+                                            <td>{time} {time > 0 ? "ms" : ""}</td>
                                         </tr>
                                     ))}
                                 </tbody>
