@@ -122,5 +122,13 @@ Ainda não foram implementados os testes unitários e de integração.
 
 ---
 
-## Considerações Finais
-Este projeto visa analisar palavras em uma estrutura hierárquica, fornecendo insights com base na profundidade das palavras em relação à frase fornecida. Tanto a CLI quanto a interface web foram projetadas para serem extensíveis e fáceis de usar.
+##
+<div align="center">
+<h2>Werricsson Santos</h2>
+    <img align="center" alt="Werricsson Santos" style="border-radius: 25px;" height="190" width="190" src="https://avatars.githubusercontent.com/u/112734393?v=4">
+</div>
+</br> </br>
+<div align="center">
+    <a href = "mailto:werricsson.santos@gmail.com"><img src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
+    <a href="https://www.linkedin.com/in/werricsson-santos/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a> 
+</div>
